@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सेवा सारथी - हवामान अंदाज</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: white;
+        }
+     body::-webkit-scrollbar {
+    display: none;
+}
+        .marathi-text {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 10px 16px;
+        }
+        .nav-link:hover {
+            background: rgba(72, 187, 120, 0.1);
+            transform: translateY(-2px);
+        }
+        .nav-link.active {
+            background: rgba(72, 187, 120, 0.15);
+            color: #16a34a;
+            font-weight: 600;
+        }
+        
+        .loading {
+            display: none;
+        }
+        #error-message {
+            display: none;
+        }
+        .forecast-day {
+            text-align: center;
+        }
+        .forecast-icon {
+            display: flex;
+            justify-content: center;
+        }
+        .forecast-temp {
+            text-align: center;
+        }
+        .current-weather-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .current-weather-content {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+        }
+        .current-date {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.25rem;
+        }
+        .forecast-date {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.25rem;
+        }
+
+        .brand-gradient {
+            background: linear-gradient(to right, #a8e6cf, #4CAF50);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .uv-low { background-color: #4ade80; }
+        .uv-moderate { background-color: #facc15; }
+        .uv-high { background-color: #f97316; }
+        .uv-very-high { background-color: #ef4444; }
+        .uv-extreme { background-color: #9333ea; }
+
+        
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div id="header-container"></div>
+    <div id="background-container"></div>
+    
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full relative z-10">
+        <!-- Weather Header Section with Glass Effect -->
+        <section class="text-center mb-12">
+            
+                <!-- Animated Background Elements -->
+                <div class="absolute top-0 left-1/4 w-20 h-20 bg-yellow-500 rounded-full filter blur-xl opacity-10 animate-pulse"></div>
+                <div class="absolute bottom-0 right-1/4 w-16 h-16 bg-blue-500 rounded-full filter blur-xl opacity-10 animate-pulse delay-1000"></div>
+                
+                <div class="relative">
+                    <div class="flex items-center justify-center space-x-4 mb-6">
+                        
+                            <span class="material-icons text-yellow-400 text-3xl">wb_sunny</span>
+                    
+                        <h1 class="text-4xl md:text-5xl font-bold text-white brand-gradient drop-shadow-lg">हवामान अंदाज</h1>
+                       
+                            <span class="material-icons text-blue-400 text-3xl">cloud</span>
+                        
+                    </div>
+                    
+                    <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-8 marathi-text">
+                        ताजे हवामान अंदाज आणि शेतकरी सल्ला
+                    </p>
+
+                    <!-- Search Section -->
+                    <div class="max-w-md mx-auto mt-6 relative">
+                        <input type="text" id="search-input" placeholder="स्थान शोधा..." 
+                               class="w-full px-6 py-4 rounded-full bg-black bg-opacity-50 backdrop-blur-md border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 marathi-text">
+                        <button id="search-btn" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-400 transition-colors">
+                            <i class="fas fa-search text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            
+        </section>
+
+        <!-- Loading Indicator with Glass Effect -->
+        <div id="loading" class="loading hidden">
+            <div class="bg-black bg-opacity-50 backdrop-blur-md rounded-2xl p-8 border border-gray-600 text-center">
+                <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500"></div>
+                <p class="mt-4 text-gray-300 marathi-text text-lg">हवामान माहिती लोड करत आहे...</p>
+            </div>
+        </div>
+
+        <!-- Error Message with Glass Effect -->
+        <div id="error-message" class="bg-black bg-opacity-50 backdrop-blur-md border border-red-500 text-red-200 px-6 py-4 rounded-2xl mb-6 text-center marathi-text hidden">
+            <div class="flex items-center justify-center space-x-2">
+                <i class="fas fa-exclamation-triangle text-red-400"></i>
+                <span>स्थान आढळले नाही. कृपया वेगळे स्थान प्रयत्न करा.</span>
+            </div>
+        </div>
+
+        <!-- Current Weather Section with Glass Effect -->
+        <div id="current-weather" class="bg-black bg-opacity-30 backdrop-blur-lg rounded-2xl p-8 mb-10 scale-in border border-gray-700 shadow-2xl">
+            <div class="current-weather-content">
+                <div class="flex flex-col md:flex-row items-center mb-6 md:mb-0">
+                    <div id="current-weather-icon" class="text-8xl mr-6 mb-4 md:mb-0">
+                        <i class="fas fa-cloud-sun text-yellow-400"></i>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h2 id="location" class="text-3xl font-bold text-white marathi-text mb-2">पुणे, महाराष्ट्र</h2>
+                        <p id="current-date" class="current-date marathi-text text-lg mb-3">आज, १५ डिसेंबर २०२३</p>
+                        <p id="weather-description" class="text-gray-300 marathi-text text-xl mb-4">काहीसे ढगाळ</p>
+                        <p id="current-temp" class="text-6xl font-bold text-white marathi-text">२२°C</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
+                    <div class="bg-black bg-opacity-50 p-4 rounded-xl border border-green-500 border-opacity-30">
+                        <p class="text-gray-300 marathi-text text-sm">आर्द्रता</p>
+                        <p id="humidity" class="text-2xl font-bold text-green-400 marathi-text">६५%</p>
+                    </div>
+                    <div class="bg-black bg-opacity-50 p-4 rounded-xl border border-blue-500 border-opacity-30">
+                        <p class="text-gray-300 marathi-text text-sm">वारा</p>
+                        <p id="wind-speed" class="text-2xl font-bold text-blue-400 marathi-text">१३ किमी/ता</p>
+                    </div>
+                    <div class="bg-black bg-opacity-50 p-4 rounded-xl border border-purple-500 border-opacity-30 col-span-2 md:col-span-1">
+                        <p class="text-gray-300 marathi-text text-sm">UV इंडेक्स</p>
+                        <div id="uv-index" class="px-4 py-2 rounded-full text-white uv-moderate inline-block marathi-text font-medium">मध्यम</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5-Day Forecast Section -->
+        <section class="mb-12">
+            <div class="flex items-center justify-center mb-8">
+                <h3 class="text-3xl font-bold text-white marathi-text flex items-center">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500 bg-opacity-20 flex items-center justify-center mr-3">
+                        <span class="material-icons text-blue-400">calendar_today</span>
+                    </div>
+                    ५-दिवसीय हवामान अंदाज
+                </h3>
+            </div>
+            <div id="forecast-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-10" style="justify-content: center;">
+                <!-- Forecast cards will be inserted here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Weather Details Section with Glass Effect -->
+        <div class="bg-black bg-opacity-30 backdrop-blur-lg rounded-2xl p-8 scale-in border border-gray-700 shadow-2xl">
+            <div class="flex items-center justify-center mb-8">
+                <h3 class="text-3xl font-bold text-white marathi-text flex items-center">
+                    <div class="w-10 h-10 rounded-xl bg-green-500 bg-opacity-20 flex items-center justify-center mr-3">
+                        <span class="material-icons text-green-400">insights</span>
+                    </div>
+                    हवामान तपशील
+                </h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-black bg-opacity-50 p-6 rounded-xl border border-blue-500 border-opacity-30 hover:border-blue-400 transition-all duration-300 group">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500 bg-opacity-20 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-temperature-low text-blue-400 text-xl"></i>
+                        </div>
+                        <span class="font-semibold text-white marathi-text text-lg">जाणवते</span>
+                    </div>
+                    <p id="feels-like" class="text-3xl font-bold text-blue-400 marathi-text">२३°C</p>
+                </div>
+                <div class="bg-black bg-opacity-50 p-6 rounded-xl border border-green-500 border-opacity-30 hover:border-green-400 transition-all duration-300 group">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 rounded-xl bg-green-500 bg-opacity-20 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-tint text-green-400 text-xl"></i>
+                        </div>
+                        <span class="font-semibold text-white marathi-text text-lg">दवबिंदू</span>
+                    </div>
+                    <p id="dew-point" class="text-3xl font-bold text-green-400 marathi-text">१६°C</p>
+                </div>
+                <div class="bg-black bg-opacity-50 p-6 rounded-xl border border-purple-500 border-opacity-30 hover:border-purple-400 transition-all duration-300 group">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500 bg-opacity-20 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-wind text-purple-400 text-xl"></i>
+                        </div>
+                        <span class="font-semibold text-white marathi-text text-lg">वाऱ्याचा झोत</span>
+                    </div>
+                    <p id="wind-gust" class="text-3xl font-bold text-purple-400 marathi-text">२४ किमी/ता</p>
+                </div>
+                <div class="bg-black bg-opacity-50 p-6 rounded-xl border border-yellow-500 border-opacity-30 hover:border-yellow-400 transition-all duration-300 group">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500 bg-opacity-20 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-eye text-yellow-400 text-xl"></i>
+                        </div>
+                        <span class="font-semibold text-white marathi-text text-lg">दृश्यता</span>
+                    </div>
+                    <p id="visibility" class="text-3xl font-bold text-yellow-400 marathi-text">१६ किमी</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="weather.js"></script>
+    
+</body>
+</html>

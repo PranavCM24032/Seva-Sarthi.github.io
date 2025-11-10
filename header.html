@@ -1,0 +1,421 @@
+<style>
+    .nav-link {
+        padding: 6px 10px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        position: relative;
+        white-space: nowrap;
+        border: 1px solid transparent;
+        font-size: 0.875rem;
+    }
+
+    @media (min-width: 640px) {
+        .nav-link {
+            padding: 8px 12px;
+            font-size: 1rem;
+        }
+    }
+
+    .nav-link:hover {
+        background: rgba(168, 230, 207, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .nav-link.active {
+        background: rgba(168, 230, 207, 0.15);
+        color: white;
+        font-weight: 600;
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+    }
+
+    .nav-link.active .material-icons {
+        transform: scale(1.05);
+    }
+
+    /* Active link border colors based on icon color */
+    .nav-link[data-tab="home"].active {
+        border-color: rgba(34, 197, 94, 0.4);
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+    }
+
+    .nav-link[data-tab="weather"].active {
+        border-color: rgba(234, 179, 8, 0.4);
+        box-shadow: 0 0 10px rgba(234, 179, 8, 0.2);
+    }
+
+    .nav-link[data-tab="market"].active {
+        border-color: rgba(239, 68, 68, 0.4);
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+    }
+
+    .nav-link[data-tab="soil"].active {
+        border-color: rgba(249, 115, 22, 0.4);
+        box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+    }
+
+    .nav-link[data-tab="schemes"].active {
+        border-color: rgba(168, 85, 247, 0.4);
+        box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+    }
+
+    .nav-link[data-tab="crop"].active {
+        border-color: rgba(34, 197, 94, 0.4);
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+    }
+
+    .nav-link[data-tab="chatbot"].active {
+        border-color: rgba(129, 140, 248, 0.4);
+        box-shadow: 0 0 10px rgba(129, 140, 248, 0.2);
+    }
+
+    /* Custom breakpoint for extra small screens */
+    @media (min-width: 475px) {
+        .xs\:inline {
+            display: inline !important;
+        }
+        .xs\:hidden {
+            display: none !important;
+        }
+    }
+    
+    /* Compact header specific styles */
+    .compact-logo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    @media (min-width: 640px) {
+        .compact-logo {
+            width: 48px;
+            height: 48px;
+        }
+    }
+    
+    .compact-user-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    @media (min-width: 640px) {
+        .compact-user-icon {
+            width: 36px;
+            height: 36px;
+        }
+    }
+
+    /* Responsive Header Styles */
+    .responsive-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: linear-gradient(to right, #1f2937, #111827);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    /* Mobile Menu Styles */
+    .mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background: #1f2937;
+    }
+
+    .mobile-menu.open {
+        max-height: 400px;
+    }
+
+    .mobile-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        color: #d1d5db;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .mobile-nav-link:hover {
+        background: rgba(168, 230, 207, 0.1);
+        color: white;
+        border-left-color: currentColor;
+    }
+
+    .mobile-nav-link.active {
+        background: rgba(168, 230, 207, 0.15);
+        color: white;
+        font-weight: 600;
+        border-left-color: currentColor;
+    }
+
+    /* Hide desktop nav on mobile */
+    @media (max-width: 768px) {
+        .desktop-nav {
+            display: none !important;
+        }
+        .mobile-menu-btn {
+            display: flex !important;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .mobile-menu-btn {
+            display: none !important;
+        }
+        .mobile-menu {
+            display: none !important;
+        }
+    }
+
+    /* Scrollable navigation for tablets */
+    @media (max-width: 1024px) and (min-width: 769px) {
+        .nav-scroll {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .nav-scroll::-webkit-scrollbar {
+            display: none;
+        }
+    }
+</style>
+
+<!-- Responsive Fixed Header -->
+<header class="responsive-header">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+        <!-- Main Header Row -->
+        <div class="flex justify-between items-center py-3">
+            <!-- Logo and Brand Section -->
+            <div class="flex items-center space-x-2 flex-shrink-0">
+                <img src="logo.png" alt="सेवा सारथी लोगो" class="compact-logo object-contain">
+                <div class="hidden sm:block">
+                    <h1 class="text-lg md:text-xl font-bold text-white">सेवा सारथी</h1>
+                    <p class="text-xs text-gray-300">शेतकऱ्यांचा डिजिटल साथीदार</p>
+                </div>
+                <div class="sm:hidden">
+                    <h1 class="text-base font-bold text-white">सेवा सारथी</h1>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav flex items-center">
+                <div class="flex flex-wrap gap-1 md:gap-1.5 justify-center nav-scroll">
+                    <a href="home.html" class="nav-link flex items-center space-x-1 text-gray-300 hover:text-white transition-all duration-300 relative group" data-tab="home">
+                        <span class="material-icons text-green-300 group-hover:scale-105 transition-transform text-base md:text-lg">home</span>
+                        <span class="hidden xs:inline">होम</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 transition-all duration-300 group-hover:w-full"></div>
+                    </a>
+                    <a href="weather.html" class="nav-link flex items-center space-x-1 text-gray-300 hover:text-white transition-all duration-300 relative group" data-tab="weather">
+                        <span class="material-icons text-yellow-300 group-hover:scale-105 transition-transform text-base md:text-lg">wb_sunny</span>
+                        <span class="hidden xs:inline">हवामान</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></div>
+                    </a>
+                    <a href="market.html" class="nav-link flex items-center space-x-1 text-gray-300 hover:text-white transition-all duration-300 relative group" data-tab="market">
+                        <span class="material-icons text-red-300 group-hover:scale-105 transition-transform text-base md:text-lg">trending_up</span>
+                        <span class="hidden sm:inline">बाजार भाव</span>
+                        <span class="sm:hidden">बाजार</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-400 transition-all duration-300 group-hover:w-full"></div>
+                    </a>
+                    <a href="soil.html" class="nav-link flex items-center space-x-1 text-gray-300 hover:text-white transition-all duration-300 relative group" data-tab="soil">
+                        <span class="material-icons text-orange-300 group-hover:scale-105 transition-transform text-base md:text-lg">science</span>
+                        <span class="hidden sm:inline">माती तपासणी</span>
+                        <span class="sm:hidden">माती</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-400 transition-all duration-300 group-hover:w-full"></div>
+                    </a>
+                    <a href="schemes.html" class="nav-link flex items-center space-x-1 text-gray-300 hover:text-white transition-all duration-300 relative group" data-tab="schemes">
+                        <span class="material-icons text-purple-300 group-hover:scale-105 transition-transform text-base md:text-lg">description</span>
+                        <span class="hidden sm:inline">सरकारी योजना</span>
+                        <span class="sm:hidden">योजना</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-400 transition-all duration-300 group-hover:w-full"></div>
+                    </a>
+                    <a href="crop.html" class="nav-link flex items-center space-x-1 text-gray-300 hover:text-white transition-all duration-300 relative group" data-tab="crop">
+                        <span class="material-icons text-green-300 group-hover:scale-105 transition-transform text-base md:text-lg">eco</span>
+                        <span class="hidden sm:inline">पीक व्यवस्थापन</span>
+                        <span class="sm:hidden">पीक</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 transition-all duration-300 group-hover:w-full"></div>
+                    </a>
+                    <a href="chatbot.html" class="nav-link flex items-center space-x-1 text-gray-300 hover:text-white transition-all duration-300 relative group" data-tab="chatbot">
+                        <span class="material-icons text-indigo-300 group-hover:scale-105 transition-transform text-base md:text-lg">smart_toy</span>
+                        <span class="hidden xs:inline">AI</span>
+                        <span class="xs:hidden">AI</span>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-400 transition-all duration-300 group-hover:w-full"></div>
+                    </a>
+                </div>
+            </nav>
+
+      
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-menu border-t border-gray-700" id="mobileMenu">
+            <div class="py-2">
+                <a href="home.html" class="mobile-nav-link" data-tab="home">
+                    <span class="material-icons text-green-300">home</span>
+                    <span>होम</span>
+                </a>
+                <a href="weather.html" class="mobile-nav-link" data-tab="weather">
+                    <span class="material-icons text-yellow-300">wb_sunny</span>
+                    <span>हवामान</span>
+                </a>
+                <a href="market.html" class="mobile-nav-link" data-tab="market">
+                    <span class="material-icons text-red-300">trending_up</span>
+                    <span>बाजार भाव</span>
+                </a>
+                <a href="soil.html" class="mobile-nav-link" data-tab="soil">
+                    <span class="material-icons text-orange-300">science</span>
+                    <span>माती तपासणी</span>
+                </a>
+                <a href="schemes.html" class="mobile-nav-link" data-tab="schemes">
+                    <span class="material-icons text-purple-300">description</span>
+                    <span>सरकारी योजना</span>
+                </a>
+                <a href="crop.html" class="mobile-nav-link" data-tab="crop">
+                    <span class="material-icons text-green-300">eco</span>
+                    <span>पीक व्यवस्थापन</span>
+                </a>
+                <a href="chatbot.html" class="mobile-nav-link" data-tab="chatbot">
+                    <span class="material-icons text-indigo-300">smart_toy</span>
+                    <span>AI सहाय्यक</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Add padding to body to account for fixed header -->
+<div style="height: 80px;"></div>
+
+<script>
+    // Active Tab Management
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Initializing responsive navigation...');
+        
+        function getCurrentPage() {
+            const pathname = window.location.pathname;
+            let currentPage = pathname.split('/').pop();
+            
+            if (!currentPage || currentPage === '') {
+                currentPage = 'home.html';
+            }
+            
+            if (!currentPage.endsWith('.html')) {
+                currentPage += '.html';
+            }
+            
+            console.log('📄 Detected current page:', currentPage);
+            return currentPage;
+        }
+
+        function setActiveTab() {
+            const currentPage = getCurrentPage();
+            const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+            
+            console.log('🔄 Setting active tab for:', currentPage);
+            
+            let activeSet = false;
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            navLinks.forEach(link => {
+                const linkHref = link.getAttribute('href');
+                
+                if (linkHref === currentPage) {
+                    link.classList.add('active');
+                    activeSet = true;
+                    console.log('✅ Active tab set to:', linkHref);
+                }
+            });
+            
+            if (!activeSet) {
+                const homeLink = document.querySelector('a[href="home.html"]');
+                if (homeLink) {
+                    homeLink.classList.add('active');
+                    console.log('🏠 Defaulting to home.html');
+                }
+            }
+        }
+
+        // Mobile Menu Functionality
+        function setupMobileMenu() {
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('open');
+                    
+                    // Change icon based on menu state
+                    const icon = mobileMenuButton.querySelector('.material-icons');
+                    if (mobileMenu.classList.contains('open')) {
+                        icon.textContent = 'close';
+                    } else {
+                        icon.textContent = 'menu';
+                    }
+                });
+            }
+        }
+
+        function setupHoverEffects() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    if (!this.classList.contains('active')) {
+                        const underline = this.querySelector('div');
+                        if (underline) {
+                            underline.style.width = '100%';
+                        }
+                    }
+                });
+
+                link.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('active')) {
+                        const underline = this.querySelector('div');
+                        if (underline) {
+                            underline.style.width = '0%';
+                        }
+                    }
+                });
+            });
+        }
+
+        function initializeNavigation() {
+            setActiveTab();
+            setupMobileMenu();
+            setupHoverEffects();
+            
+            setTimeout(setActiveTab, 100);
+        }
+
+        initializeNavigation();
+
+        window.addEventListener('load', setActiveTab);
+        window.addEventListener('popstate', setActiveTab);
+    });
+
+    function forceRefreshActiveTab() {
+        const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+        const currentPage = window.location.pathname.split('/').pop() || 'home.html';
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+        
+        console.log('🔄 Forced active tab refresh for:', currentPage);
+    }
+
+    // Ensure header stays fixed on scroll
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('.responsive-header');
+        if (header) {
+            header.style.transform = 'translateY(0)';
+        }
+    });
+</script>

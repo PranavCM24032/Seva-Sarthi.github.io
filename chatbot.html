@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI शेती सहाय्यक - सेवा सारथी</title>
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Noto Sans Devanagari -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: white;
+        }
+             body::-webkit-scrollbar {
+    display: none;
+}
+        .marathi-text {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+        }
+
+    .card {
+        
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 8px 32px 0 rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    
+    transform: translateY(-5px);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(25px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.3);
+}
+
+        .scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 10px 16px;
+        }
+        .nav-link:hover {
+            background: rgba(251, 146, 60, 0.15);
+            transform: translateY(-2px);
+        }
+        .nav-link.active {
+            background: rgba(251, 146, 60, 0.2);
+            color: #fb923c;
+            font-weight: 600;
+        }
+
+        .scrollbar-thin {
+            scrollbar-width: thin;
+            scrollbar-color: #fb923c transparent;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background-color: #fb923c;
+            border-radius: 3px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brand-gradient {
+            background: linear-gradient(135deg, #fed7aa, #fb923c, #ea580c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.25), rgba(234, 88, 12, 0.25));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(251, 146, 60, 0.3);
+            color: white;
+        }
+
+        .bot-message {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.25));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: white;
+        }
+
+        .quick-btn {
+            background: rgba(251, 146, 60, 0.12);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(251, 146, 60, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .quick-btn:hover {
+            background: rgba(251, 146, 60, 0.2);
+            border-color: rgba(251, 146, 60, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(251, 146, 60, 0.2);
+        }
+
+        .chat-container {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(251, 146, 60, 0.5);
+        }
+
+        .status-indicator {
+            background: rgba(251, 146, 60, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(251, 146, 60, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header Container -->
+    <div id="header-container"></div>
+
+    <!-- Background Container -->
+    <div id="background-container"></div>
+    
+    <!-- Main Chatbot Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full relative z-10">
+        <!-- Chatbot Header Section -->
+        <section class="text-center mb-6">
+            <div class="flex items-center justify-center space-x-4 mb-4">
+                <span class="material-icons text-orange-400 text-4xl">smart_toy</span>
+                <h1 class="text-4xl md:text-5xl font-bold text-white brand-gradient">AI शेती सहाय्यक</h1>
+                <span class="material-icons text-blue-400 text-4xl">psychology</span>
+            </div>
+            <p class="text-lg text-gray-300 max-w-2xl mx-auto marathi-text">
+                आधुनिक AI तंत्रज्ञानाच्या मदतीने शेतीविषयक प्रश्नांची उत्तरे मिळवा
+            </p>
+        </section>
+
+        <!-- Consent Banner -->
+        <div id="consent-banner" class="card rounded-2xl p-6 mb-6 scale-in border-l-4 border-orange-400" data-aos="fade-up">
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-orange-500 bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="material-icons text-orange-400">shield</span>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-semibold text-white mb-3 marathi-text">
+                        माहिती संकलन संमती
+                    </h3>
+                    <p class="text-gray-300 mb-4 marathi-text">
+                        आम्ही तुमचे प्रश्न आणि उत्तरे गोळा करू इच्छितो जेणेकरून सेवा सुधारू शकू. 
+                        तुमची माहिती गुप्त राखली जाईल.
+                    </p>
+                    <div class="flex gap-3">
+                        <button id="consent-accept" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105 marathi-text">
+                            होय, संमती आहे
+                        </button>
+                        <button id="consent-decline" class="border border-gray-500 text-gray-300 hover:bg-gray-700 px-6 py-3 rounded-lg font-medium transition-all marathi-text">
+                            नाही, नको
+                        </button>
+                    </div>
+                </div>
+                <button id="consent-close" class="flex-shrink-0 text-gray-400 hover:text-white transition-colors">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Welcome Section -->
+        <div id="welcome-section" class="card rounded-2xl p-8 text-center mb-6 scale-in" data-aos="fade-up">
+            <div class="w-28 h-28 bg-orange-500 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="material-icons text-orange-300 text-5xl">chat</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4 brand-gradient marathi-text">
+                नमस्कार! काय मदत करू?
+            </h2>
+            <p class="text-gray-300 mb-8 text-lg marathi-text">
+                तुमचा कृषी प्रश्न विचारा किंवा खालील प्रश्नांपैकी एक निवडा
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+                <button class="quick-question quick-btn h-auto py-5 px-6 text-left rounded-xl text-lg text-white marathi-text">
+                    <div class="flex items-center">
+                        <span class="material-icons mr-3 text-orange-300 text-2xl">bug_report</span>
+                        <div>
+                            <div class="font-semibold">माझ्या पिकाला काय झाले?</div>
+                            <div class="text-sm text-gray-300 mt-1">कीटक आणि रोग नियंत्रण</div>
+                        </div>
+                    </div>
+                </button>
+                <button class="quick-question quick-btn h-auto py-5 px-6 text-left rounded-xl text-lg text-white marathi-text">
+                    <div class="flex items-center">
+                        <span class="material-icons mr-3 text-blue-300 text-2xl">water_drop</span>
+                        <div>
+                            <div class="font-semibold">पाणी किती द्यावे?</div>
+                            <div class="text-sm text-gray-300 mt-1">सिंचन व्यवस्थापन</div>
+                        </div>
+                    </div>
+                </button>
+                <button class="quick-question quick-btn h-auto py-5 px-6 text-left rounded-xl text-lg text-white marathi-text">
+                    <div class="flex items-center">
+                        <span class="material-icons mr-3 text-green-300 text-2xl">eco</span>
+                        <div>
+                            <div class="font-semibold">कोणती खते वापरावी?</div>
+                            <div class="text-sm text-gray-300 mt-1">माती आणि खत व्यवस्थापन</div>
+                        </div>
+                    </div>
+                </button>
+                <button class="quick-question quick-btn h-auto py-5 px-6 text-left rounded-xl text-lg text-white marathi-text">
+                    <div class="flex items-center">
+                        <span class="material-icons mr-3 text-yellow-300 text-2xl">trending_up</span>
+                        <div>
+                            <div class="font-semibold">आजचे बाजार भाव?</div>
+                            <div class="text-sm text-gray-300 mt-1">बाजार माहिती आणि भाव</div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="card rounded-2xl p-6 scale-in" data-aos="fade-up">
+            <!-- Status Bar -->
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-white marathi-text">चॅट</h3>
+                <div class="flex items-center gap-3 status-indicator px-4 py-2 rounded-full">
+                    <div id="status" class="text-sm text-orange-300 font-medium marathi-text">
+                        तयार
+                    </div>
+                    <div class="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div id="messages-container" class="chat-container scrollbar-thin mb-6 space-y-4 p-4 rounded-xl">
+                <div id="messages-list" class="space-y-4">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+
+                <!-- Loading Indicator -->
+                <div id="loading-indicator" class="hidden flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-500 bg-opacity-80 backdrop-filter backdrop-blur-lg flex items-center justify-center">
+                        <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
+                    </div>
+                    <div class="glass-input rounded-2xl rounded-tl-none px-4 py-3">
+                        <p class="text-gray-300 marathi-text">विचार करत आहे...</p>
+                    </div>
+                </div>
+
+                <div id="messages-end"></div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="flex gap-3">
+                <input 
+                    id="message-input" 
+                    type="text" 
+                    placeholder="तुमचा प्रश्न लिहा..." 
+                    class="flex-1 h-14 text-lg glass-input rounded-xl px-5 focus:outline-none text-white placeholder-gray-400 marathi-text"
+                >
+                <button id="send-btn" class="h-14 w-14 bg-orange-500 hover:bg-orange-600 text-white rounded-xl flex items-center justify-center transition-all transform hover:scale-105 shadow-lg">
+                    <span class="material-icons text-2xl">send</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="bg-orange-900 bg-opacity-30 backdrop-filter backdrop-blur-lg border-l-4 border-orange-400 rounded-r-2xl p-6 mt-6 scale-in" data-aos="fade-up">
+            <div class="flex items-start gap-4">
+                <span class="material-icons text-orange-300 text-2xl">warning</span>
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2 marathi-text">महत्वाचे सूचना</h4>
+                    <p class="text-orange-200 marathi-text">
+                        ⚠️ हा माहितीजन्य सल्ला आहे. निर्णायक कृती करण्यापूर्वी स्थानिक कृषी तज्ञांचा सल्ला घ्या. 
+                        आपत्कालीन परिस्थितीत तज्ञांचा सल्ला आवश्यक आहे.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Load JavaScript -->
+    <script src="chatbot.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+</html>

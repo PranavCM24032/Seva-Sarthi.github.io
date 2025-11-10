@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सेवा सारथी - बाजार भाव</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: white;
+        }
+        body::-webkit-scrollbar {
+            display: none;
+    }
+        .marathi-text {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .brand-gradient {
+            background: linear-gradient(to right, #a8e6cf, #4CAF50);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #4B5563;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1F2937;
+            max-height: 200px;
+            overflow-y: auto;
+            color: white;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #374151;
+        }
+        .autocomplete-items div:hover {
+            background-color: #374151;
+        }
+        .autocomplete-active {
+            background-color: #10B981 !important;
+            color: #ffffff;
+        }
+        .loading {
+            display: none;
+        }
+        .notification {
+            z-index: 1000;
+        }
+        .real-time-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        .market-card {
+            transition: all 0.3s ease;
+        }
+        .market-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        /* Updated green button styles for dark theme */
+        .btn-green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.3) 100%);
+            border: 2px solid #10B981;
+            color: #10B981;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .btn-green:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(16, 185, 129, 0.4) 100%);
+            border-color: #34D399;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+        /* Updated purple table styles for dark theme */
+        .table-purple {
+            border: 2px solid #7C3AED;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .table-purple thead {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(124, 58, 237, 0.4) 100%);
+        }
+        .table-purple th {
+            border-color: #6D28D9;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(124, 58, 237, 0.4) 100%);
+            color: white;
+        }
+        .table-purple td {
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .table-purple tbody tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .table-purple tbody tr:hover td {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        /* Updated export button styles for dark theme */
+        .btn-purple {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(124, 58, 237, 0.3) 100%);
+            border: 2px solid #7C3AED;
+            color: #C4B5FD;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-purple:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(124, 58, 237, 0.4) 100%);
+            border-color: #8B5CF6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+        
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div id="header-container"></div>
+    <div id="background-container"></div>
+    
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full relative z-10">
+        <!-- Market Header Section with Creative Design -->
+        <section class="text-center mb-12 relative">
+            <!-- Animated Background Elements -->
+            <div class="absolute top-0 left-1/4 w-20 h-20 bg-green-500 rounded-full filter blur-xl opacity-10 animate-pulse"></div>
+            <div class="absolute bottom-0 right-1/4 w-16 h-16 bg-yellow-500 rounded-full filter blur-xl opacity-10 animate-pulse delay-1000"></div>
+            
+            <div class="relative">
+                <div class="flex items-center justify-center space-x-4 mb-6">
+                   
+                        <span class="material-icons text-blue-400 text-3xl">trending_up</span>
+                    
+                    <h1 class="text-4xl md:text-5xl font-bold text-white brand-gradient drop-shadow-lg">
+                        बाजार भाव
+                    </h1>
+
+                        <span class="material-icons text-green-400 text-3xl">payments</span>
+                
+                </div>
+                
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-4 marathi-text">
+                    ताजे बाजार भाव, किंमत ट्रेंड आणि भविष्यातील अंदाज
+                </p>
+                
+                <!-- Live Market Indicator -->
+                <div class="inline-flex items-center px-4 py-2 rounded-full bg-black bg-opacity-40 backdrop-blur-md border border-green-500 border-opacity-50">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-ping mr-2"></div>
+                    <span class="text-green-400 text-sm font-medium marathi-text">लाइव मार्केट डेटा</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section with Glass Effect -->
+        <div class="bg-black bg-opacity-30 backdrop-blur-lg rounded-2xl p-8 mb-10 scale-in border border-gray-700 shadow-2xl">
+            <!-- Section Header with Creative Design -->
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
+                <div class="flex items-center space-x-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg">
+                        <span class="material-icons text-white text-2xl">search</span>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white marathi-text">बाजार भाव शोधा</h2>
+                        <p class="text-gray-400 text-sm marathi-text mt-1">तुमच्या पिकासाठी सर्वोत्तम किंमत शोधा</p>
+                    </div>
+                </div>
+                
+                <!-- Auto Refresh Controls -->
+                <div class="flex items-center space-x-3 bg-black bg-opacity-50 rounded-xl px-4 py-3 border border-gray-600">
+                    <span class="material-icons text-green-400 text-sm">refresh</span>
+                    <span class="text-sm text-gray-300 marathi-text">ऑटो-रिफ्रेश:</span>
+                    <select id="refreshInterval" class="text-sm bg-black bg-opacity-50 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
+                        <option value="0">बंद</option>
+                        <option value="1">1 मिनिट</option>
+                        <option value="5" selected>5 मिनिट</option>
+                        <option value="10">10 मिनिट</option>
+                        <option value="30">30 मिनिट</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Search Filters Grid -->
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+                <!-- State Selection -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-gray-300 marathi-text flex items-center">
+                        <div class="w-8 h-8 rounded-lg bg-black bg-opacity-50 flex items-center justify-center mr-2">
+                            <span class="material-icons text-green-400 text-sm">location_on</span>
+                        </div>
+                        राज्य निवडा
+                    </label>
+                    <div class="relative">
+                        <select id="stateSelect" class="w-full px-4 py-4 rounded-xl bg-black bg-opacity-50 backdrop-blur-md border border-gray-600 text-white focus:border-green-500 focus:ring-2 focus:ring-green-500 transition-all duration-300 marathi-text">
+                            <option value="">राज्य निवडा</option>
+                            <option value="Maharashtra" selected>महाराष्ट्र</option>
+                            <option value="Karnataka">कर्नाटक</option>
+                            <option value="Gujarat">गुजरात</option>
+                            <option value="Madhya Pradesh">मध्य प्रदेश</option>
+                            <option value="all">सर्व राज्ये</option>
+                        </select>
+                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <span class="material-icons">expand_more</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- District Search -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-gray-300 marathi-text flex items-center">
+                        <div class="w-8 h-8 rounded-lg bg-black bg-opacity-50 flex items-center justify-center mr-2">
+                            <span class="material-icons text-green-400 text-sm">map</span>
+                        </div>
+                        जिल्हा शोधा
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="districtSearch" placeholder="जिल्ह्याचे नाव टाइप करा" 
+                               class="w-full px-4 py-4 rounded-xl bg-black bg-opacity-50 backdrop-blur-md border border-gray-600 text-white placeholder-gray-500 focus:border-green-500 focus:ring-2 focus:ring-green-500 transition-all duration-300 marathi-text" 
+                               value="पुणे">
+                        <div id="districtAutocomplete" class="autocomplete-items absolute top-full left-0 right-0 bg-black bg-opacity-90 backdrop-blur-md border border-gray-600 rounded-xl mt-2 shadow-2xl z-10 max-h-60 overflow-y-auto hidden"></div>
+                    </div>
+                </div>
+
+                <!-- Crop Search -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-gray-300 marathi-text flex items-center">
+                        <div class="w-8 h-8 rounded-lg bg-black bg-opacity-50 flex items-center justify-center mr-2">
+                            <span class="material-icons text-green-400 text-sm">grass</span>
+                        </div>
+                        पीक निवडा
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="cropSearch" placeholder="पिकाचे नाव टाइप करा" 
+                               class="w-full px-4 py-4 rounded-xl bg-black bg-opacity-50 backdrop-blur-md border border-gray-600 text-white placeholder-gray-500 focus:border-green-500 focus:ring-2 focus:ring-green-500 transition-all duration-300 marathi-text" 
+                               value="गहू">
+                        <div id="cropAutocomplete" class="autocomplete-items absolute top-full left-0 right-0 bg-black bg-opacity-90 backdrop-blur-md border border-gray-600 rounded-xl mt-2 shadow-2xl z-10 max-h-60 overflow-y-auto hidden"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Action Button -->
+            <div class="flex justify-center">
+                <button id="searchBtn" class="group relative px-12 py-4 bg-gradient-to-r from-green-600 to-green-700 rounded-xl font-semibold flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:from-green-500 hover:to-green-600 active:scale-95 overflow-hidden">
+                    <div class="absolute inset-0 bg-white bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                    <span class="material-icons mr-3 text-white group-hover:animate-bounce">search</span>
+                    <span class="text-white marathi-text text-lg relative z-10">बाजार भाव शोधा</span>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-white bg-opacity-30 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                </button>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading hidden flex items-center justify-center p-6 mt-6">
+                <div class="flex items-center space-x-4 bg-black bg-opacity-50 backdrop-blur-md rounded-xl px-8 py-4 border border-gray-600">
+                    <div class="animate-spin rounded-full h-8 w-8 border-2 border-green-500 border-t-transparent"></div>
+                    <div>
+                        <p class="text-gray-300 font-medium marathi-text">लाइव डेटा लोड करत आहे...</p>
+                        <p class="text-gray-500 text-sm marathi-text">कृपया थोडा वेळ थांबा</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Status Indicator -->
+            <div id="marketStatus" class="mt-6 p-5 bg-black bg-opacity-50 backdrop-blur-md rounded-xl border-l-4 border-green-500 hidden transform transition-all duration-500">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-green-500 bg-opacity-20 flex items-center justify-center">
+                            <span class="material-icons text-green-400">insights</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-300 font-medium marathi-text">बाजार स्थिती: </span>
+                            <span id="statusText" class="text-green-300 font-semibold marathi-text">लोड करत आहे...</span>
+                        </div>
+                    </div>
+                    <div id="marketTrend" class="flex items-center space-x-2 px-4 py-2 bg-black bg-opacity-30 rounded-lg">
+                        <span class="material-icons text-green-400 text-lg">trending_up</span>
+                        <span class="text-green-300 font-medium marathi-text">स्थिर</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Cards -->
+        
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="bg-black bg-opacity-30 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 shadow-2xl hidden">
+            <!-- Results will be dynamically loaded here -->
+        </div>
+
+        <!-- Results Table with Glass Effect -->
+        <div class="bg-black bg-opacity-30 backdrop-blur-lg rounded-2xl p-8 mb-10 scale-in border border-gray-700 shadow-2xl">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
+                <h3 class="text-2xl font-bold text-white marathi-text flex items-center">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500 bg-opacity-20 flex items-center justify-center mr-3">
+                        <span class="material-icons text-purple-400">table_chart</span>
+                    </div>
+                    बाजार भाव तक्ता
+                </h3>
+                <button id="exportBtn" class="btn-purple px-6 py-3 rounded-xl font-semibold flex items-center transition-all duration-300 hover:scale-105">
+                    <span class="material-icons mr-2">download</span>
+                    <span class="marathi-text">डेटा एक्सपोर्ट करा</span>
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse table-purple rounded-xl overflow-hidden">
+                    <thead>
+                        <tr class="text-white">
+                            <th class="p-4 text-left marathi-text">क्र.</th>
+                            <th class="p-4 text-left marathi-text">राज्य</th>
+                            <th class="p-4 text-left marathi-text">जिल्हा</th>
+                            <th class="p-4 text-left marathi-text">बाजार</th>
+                            <th class="p-4 text-left marathi-text">पीक</th>
+                            <th class="p-4 text-left marathi-text">किमान किंमत (₹/क्विंटल)</th>
+                            <th class="p-4 text-left marathi-text">कमाल किंमत (₹/क्विंटल)</th>
+                            <th class="p-4 text-left marathi-text">सरासरी किंमत (₹/क्विंटल)</th>
+                            <th class="p-4 text-left marathi-text">बदल</th>
+                        </tr>
+                    </thead>
+                    <tbody id="priceTableBody">
+                        <tr>
+                            <td colspan="9" class="p-8 text-center text-gray-400 marathi-text">
+                                <div class="flex flex-col items-center justify-center py-8">
+                                    <span class="material-icons text-gray-500 text-4xl mb-4">search_off</span>
+                                    कृपया शोध बटण दाबा
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Price Graph Section with Glass Effect -->
+        <div class="bg-black bg-opacity-30 backdrop-blur-lg rounded-2xl p-8 mb-10 scale-in border border-gray-700 shadow-2xl">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
+                <h3 class="text-2xl font-bold text-white marathi-text flex items-center">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500 bg-opacity-20 flex items-center justify-center mr-3">
+                        <span class="material-icons text-blue-400">show_chart</span>
+                    </div>
+                    किंमत आलेख आणि अंदाज
+                </h3>
+                <div class="flex items-center space-x-2 bg-black bg-opacity-50 rounded-xl px-4 py-2 border border-gray-600">
+                    <span class="material-icons text-blue-400 text-sm">info</span>
+                    <span class="text-sm text-gray-300 marathi-text">अंदाज मागील 6 महिन्यांच्या डेटावर आधारित</span>
+                </div>
+            </div>
+            <div class="chart-container bg-black bg-opacity-20 rounded-xl p-4 border border-gray-600">
+                <canvas id="priceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Price Summary Cards with Glass Effect -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <!-- Current Price Card -->
+            <div class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-green-500 border-opacity-50 hover:border-green-400 transition-all duration-300 group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-xl bg-green-500 bg-opacity-20 flex items-center justify-center mr-3">
+                            <span class="material-icons text-green-400">payments</span>
+                        </div>
+                        <h4 class="font-semibold text-white marathi-text">सध्याची किंमत</h4>
+                    </div>
+                    <span class="text-green-400 material-icons group-hover:animate-bounce">trending_up</span>
+                </div>
+                <p id="currentPrice" class="text-3xl font-bold text-green-400 mb-2">-</p>
+                <p class="text-sm text-gray-300 marathi-text" id="priceChange">लोड करत आहे...</p>
+            </div>
+
+            <!-- 3 Month Change Card -->
+            <div class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-purple-500 border-opacity-50 hover:border-purple-400 transition-all duration-300 group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500 bg-opacity-20 flex items-center justify-center mr-3">
+                            <span class="material-icons text-purple-400">trending_up</span>
+                        </div>
+                        <h4 class="font-semibold text-white marathi-text">3 महिन्यांत बदल</h4>
+                    </div>
+                    <span id="trendIcon" class="text-purple-400 material-icons">arrow_upward</span>
+                </div>
+                <p id="threeMonthChange" class="text-3xl font-bold text-purple-400 mb-2">-</p>
+                <p class="text-sm text-gray-300 marathi-text" id="trendDescription">गेल्या 3 महिन्यांतील बदल</p>
+            </div>
+
+            <!-- Best Month Card -->
+            <div class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-yellow-500 border-opacity-50 hover:border-yellow-400 transition-all duration-300 group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500 bg-opacity-20 flex items-center justify-center mr-3">
+                            <span class="material-icons text-yellow-400">calendar_today</span>
+                        </div>
+                        <h4 class="font-semibold text-white marathi-text">सर्वोत्तम महिना</h4>
+                    </div>
+                    <span class="text-yellow-400 material-icons">star</span>
+                </div>
+                <p id="bestMonth" class="text-3xl font-bold text-yellow-400 mb-2">-</p>
+                <p class="text-sm text-gray-300 marathi-text" id="bestPrice">गेल्या वर्षी सर्वोत्तम किंमत</p>
+            </div>
+
+            <!-- Market Activity Card -->
+            <div class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-blue-500 border-opacity-50 hover:border-blue-400 transition-all duration-300 group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500 bg-opacity-20 flex items-center justify-center mr-3">
+                            <span class="material-icons text-blue-400">insights</span>
+                        </div>
+                        <h4 class="font-semibold text-white marathi-text">बाजार सक्रियता</h4>
+                    </div>
+                    <span class="text-blue-400 material-icons">activity</span>
+                </div>
+                <p id="marketActivity" class="text-3xl font-bold text-blue-400 mb-2">-</p>
+                <p class="text-sm text-gray-300 marathi-text" id="activityStatus">सध्याची बाजार स्थिती</p>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="market.js"></script>
+
+</body>
+</html>

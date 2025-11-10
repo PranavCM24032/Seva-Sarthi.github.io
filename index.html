@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>लोड होत आहे - सेवा सारथी</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans Devanagari', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2f3b 0%, #2c5530 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite linear;
+        }
+        
+        .bg-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .bg-element:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 70%;
+            left: 80%;
+            animation-delay: -5s;
+        }
+        
+        .bg-element:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 20%;
+            left: 85%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+        
+        .loading-container {
+            text-align: center;
+            z-index: 10;
+            max-width: 600px;
+            padding: 2rem;
+        }
+        
+        .logo-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .logo-circle {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: pulse 2s infinite alternate;
+            overflow: hidden;
+        }
+        
+        .logo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            }
+            100% {
+                transform: scale(1.05);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            }
+        }
+        
+        .brand-name {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #a8e6cf, #4CAF50);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sanskrit {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 2px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 500px;
+            line-height: 1.6;
+        }
+        
+        .progress-container {
+            width: 300px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 2rem auto;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #4CAF50, #a8e6cf);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 1rem;
+            min-height: 24px;
+        }
+        
+        .loading-dots:after {
+            content: '';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% {
+                color: rgba(0,0,0,0);
+                text-shadow:
+                    .25em 0 0 rgba(0,0,0,0),
+                    .5em 0 0 rgba(0,0,0,0);
+            }
+            40% {
+                color: white;
+                text-shadow:
+                    .25em 0 0 rgba(0,0,0,0),
+                    .5em 0 0 rgba(0,0,0,0);
+            }
+            60% {
+                text-shadow:
+                    .25em 0 0 white,
+                    .5em 0 0 rgba(0,0,0,0);
+            }
+            80%, 100% {
+                text-shadow:
+                    .25em 0 0 white,
+                    .5em 0 0 white;
+            }
+        }
+        
+        .success-message {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            margin-top: 1rem;
+            color: #a8e6cf;
+            font-weight: 500;
+            font-size: 1.2rem;
+        }
+        
+        .success-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-element"></div>
+    <div class="bg-element"></div>
+    <div class="bg-element"></div>
+    
+    <div class="loading-container">
+        <div class="logo-container">
+          <div class ="logo-circle">
+            <img src="logo.png" class="logo">
+          </div>
+        </div>
+        
+        <h1 class="brand-name">सेवा सारथी</h1>
+        <div class="sanskrit">Seva Sarthi</div>
+        
+        <p class="tagline">आधुनिक तंत्रज्ञानाच्या मदतीने शेती सोपी आणि फायदेशीर करण्याचा आमचा संकल्प</p>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="loading-text" id="loadingText">
+            लोड होत आहे<span class="loading-dots">...</span>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            ✅ तयार आहे! पुढे जात आहे...
+        </div>
+    </div>
+    
+    <div class="footer">
+        © २०२५ सेवा सारथी. सर्व हक्क राखीव.
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBar = document.getElementById('progressBar');
+            const loadingText = document.getElementById('loadingText');
+            const successMessage = document.getElementById('successMessage');
+            
+            const texts = [
+                "संसाधने लोड होत आहेत...",
+                "सेवा तयार करत आहे...",
+                "समुदायाशी जोडले जात आहे...",
+                "जवळजवळ तयार आहे..."
+            ];
+            
+            let progress = 0;
+            let textIndex = 0;
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    loadingText.style.opacity = '0';
+                    setTimeout(() => {
+                        successMessage.classList.add('show');
+                    }, 300);
+                    
+                    setTimeout(() => {
+                        window.location.href = 'home.html';
+                    }, 2000);
+                }
+                
+                progressBar.style.width = `${progress}%`;
+                
+                if (progress > 20 && textIndex === 0) {
+                    loadingText.innerHTML = texts[0] + '<span class="loading-dots">...</span>';
+                    textIndex = 1;
+                } else if (progress > 45 && textIndex === 1) {
+                    loadingText.innerHTML = texts[1] + '<span class="loading-dots">...</span>';
+                    textIndex = 2;
+                } else if (progress > 70 && textIndex === 2) {
+                    loadingText.innerHTML = texts[2] + '<span class="loading-dots">...</span>';
+                    textIndex = 3;
+                } else if (progress > 90 && textIndex === 3) {
+                    loadingText.innerHTML = texts[3] + '<span class="loading-dots">...</span>';
+                    textIndex = 4;
+                }
+            }, 300);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सरकारी योजना - सेवा सारथी</title>
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Noto Sans Devanagari -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+             --primary-50: #f0fdf4;
+    --primary-100: #dcfce7;
+    --primary-200: #bbf7d0;
+    --primary-300: #86efac;
+    --primary-400: #4ade80;
+    --primary-500: #22c55e;
+    --primary-600: #16a34a;
+    --primary-700: #15803d;
+    --primary-800: #166534;
+    --primary-900: #14532d;
+            
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            --success-500: #10b981;
+            --success-600: #059669;
+            --warning-500: #f59e0b;
+            --warning-600: #d97706;
+            --error-500: #ef4444;
+            --error-600: #dc2626;
+        }
+
+        body {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: white;
+        }
+             body::-webkit-scrollbar {
+    display: none;
+}
+        .marathi-text {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .match-percentage {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+
+        .scheme-card {
+            transition: all 0.3s ease;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .progress-bar {
+            background: var(--primary-600);
+            height: 4px;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .checkbox-container:hover {
+            background-color: rgba(168, 230, 207, 0.2);
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .high-match { color: var(--primary-600); }
+        .medium-match { color: var(--warning-600); }
+        .low-match { color: var(--error-600); }
+
+        .btn-primary {
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            transition: all 0.2s ease;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-700);
+        }
+
+        .form-input {
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 12px;
+            border-radius: 8px;
+            width: 100%;
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-500);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.2);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Select dropdown styling */
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        /* Placeholder styling */
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+
+
+  .circular-progress {
+            position: relative;
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-500) 0deg, #e5e7eb 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circular-progress::before {
+            content: "";
+            position: absolute;
+            height: 70px;
+            width: 70px;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        .progress-value {
+            position: relative;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--success-600);
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+/* Match percentage colors */
+.high-match { color: var(--success-600); }
+.medium-match { color: var(--warning-600); }
+.low-match { color: var(--error-600); }
+   
+    
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn.active {
+            background: var(--primary-600);
+            box-shadow: 0 4px 12px rgba(126, 34, 206, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-btn.active:hover {
+            background: var(--primary-700);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-600);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-700);
+        }
+        /* Improved responsive navigation - FIXED */
+.desktop-nav {
+    flex: 1;
+    min-width: 0; /* This allows flex-shrink to work properly */
+    margin: 0 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .desktop-nav {
+        margin: 0 1rem;
+    }
+}
+
+.nav-scroll {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+@media (min-width: 640px) {
+    .nav-scroll {
+        gap: 0.5rem;
+    }
+}
+
+.nav-link {
+    flex-shrink: 0; /* Prevent items from shrinking */
+    white-space: nowrap;
+}
+
+/* Better responsive behavior */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .nav-scroll {
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        justify-content: flex-start;
+        padding: 4px 0;
+    }
+    
+    .nav-scroll::-webkit-scrollbar {
+        display: none;
+    }
+    
+    /* Allow some items to show shorter text on very small tablets */
+    .nav-link[data-tab="market"] .hidden.sm\:inline,
+    .nav-link[data-tab="soil"] .hidden.sm\:inline,
+    .nav-link[data-tab="schemes"] .hidden.sm\:inline,
+    .nav-link[data-tab="crop"] .hidden.sm\:inline {
+        display: none !important;
+    }
+    
+    .nav-link[data-tab="market"] .sm\:hidden,
+    .nav-link[data-tab="soil"] .sm\:hidden,
+    .nav-link[data-tab="schemes"] .sm\:hidden,
+    .nav-link[data-tab="crop"] .sm\:hidden {
+        display: inline !important;
+    }
+}
+
+/* Optimize for very small desktop screens */
+@media (min-width: 769px) and (max-width: 900px) {
+    .nav-link {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .nav-link .material-icons {
+        font-size: 17px;
+    }
+}
+
+/* Ensure logo and user sections don't take too much space */
+@media (max-width: 1024px) {
+    .flex.items-center.space-x-2.flex-shrink-0 {
+        flex-shrink: 0;
+        min-width: auto;
+    }
+    
+    .compact-logo {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .compact-user-icon {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* Make sure the header container uses space efficiently */
+.responsive-header .max-w-7xl {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    
+    <!-- Header Container -->
+    <div id="header-container"></div>
+
+    <!-- Background Container - This will be populated by JavaScript -->
+    <div id="background-container"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow relative z-10 w-full">
+        
+        <!-- Page Header -->
+      <section class="text-center mb-8">
+    <div class="flex items-center justify-center space-x-4 mb-4">
+        <span class="material-icons text-purple-400 text-4xl">account_balance</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white">सरकारी योजना</h1>
+        <span class="material-icons text-green-400 text-4xl">search</span>
+    </div>
+    <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-8 marathi-text">
+        तुमच्या गरजेनुसार योग्य सरकारी योजना शोधा
+    </p>
+</section>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-center mb-8">
+            <button id="all-schemes-btn" class="nav-btn active" onclick="showPage('browse-schemes')">
+                <i class="fas fa-layer-group mr-2"></i>
+                सर्व योजना
+            </button>
+            <button id="find-schemes-btn" class="nav-btn" onclick="showPage('find-schemes')">
+                <i class="fas fa-search mr-2"></i>
+                योजना शोधा
+            </button>
+        </div>
+
+        <!-- Browse Schemes Page -->
+        <div id="browse-schemes-page" class="page active fade-in">
+            <!-- Search Bar -->
+      
+            <!-- Schemes Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="schemes-grid">
+                <!-- Scheme cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Find Schemes Page with Multi-step Form -->
+        <div id="find-schemes-page" class="page hidden fade-in">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-white">योजना शोध प्रोफाइल</h1>
+                <p class="text-gray-300 marathi-text">तुमची माहिती भरून योग्य योजना शोधा</p>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="card rounded-2xl p-6 mb-6">
+                <div class="flex justify-between mb-1 text-xs">
+                    <div class="text-center flex-1">
+                        <div class="font-medium text-green-300">व्यक्तिगत विवरण</div>
+                    </div>
+                    <div class="text-center flex-1">
+                        <div class="font-medium text-gray-400">स्थान</div>
+                    </div>
+                    <div class="text-center flex-1">
+                        <div class="font-medium text-gray-400">भूमि और फसल</div>
+                    </div>
+                    <div class="text-center flex-1">
+                        <div class="font-medium text-gray-400">वित्तीय जानकारी</div>
+                    </div>
+                    <div class="text-center flex-1">
+                        <div class="font-medium text-gray-400">अन्य गतिविधियां</div>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-600 rounded-full h-2">
+                    <div class="progress-bar h-2 rounded-full" style="width: 20%" id="form-progress"></div>
+                </div>
+            </div>
+
+            <!-- Form Steps -->
+            <div class="card rounded-2xl overflow-hidden">
+                <!-- Step 1: Personal Details -->
+                <div id="step-1" class="form-step active p-4 md:p-6">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white mb-1">व्यक्तिगत विवरण</h3>
+                            <p class="text-xs text-gray-300">तुमची व्यक्तिगत माहिती भरा</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">पूरा नाम *</label>
+                            <input type="text" class="form-input" placeholder="तुमचे पूर्ण नाव" id="farmer_name" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">आयु *</label>
+                            <input type="number" class="form-input" placeholder="वय" id="age" min="18" max="100" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">लिंग *</label>
+                            <select class="form-input" id="gender" required>
+                                <option value="">लिंग निवडा</option>
+                                <option value="पुरुष">पुरुष</option>
+                                <option value="महिला">महिला</option>
+                                <option value="इतर">इतर</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">मोबाइल नंबर *</label>
+                            <input type="tel" class="form-input" placeholder="10-अंकी मोबाइल नंबर" id="mobile" pattern="[0-9]{10}" required>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-6 pt-4 border-t border-gray-600">
+                        <button onclick="showPage('browse-schemes')" class="bg-gray-600 text-white hover:bg-gray-700 font-medium py-2 px-4 rounded transition">
+                            रद्द करा
+                        </button>
+                        <button onclick="nextFormStep(2)" class="btn-primary font-medium py-2 px-4 rounded transition flex items-center space-x-1">
+                            <span>पुढे</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Location Details -->
+                <div id="step-2" class="form-step p-4 md:p-6">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white mb-1">स्थान विवरण</h3>
+                            <p class="text-xs text-gray-300">तुमचे ठिकाणाची माहिती भरा</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">राज्य *</label>
+                            <select class="form-input" id="state" required>
+                                <option value="">राज्य निवडा</option>
+                                <option value="महाराष्ट्र">महाराष्ट्र</option>
+                                <option value="गुजरात">गुजरात</option>
+                                <option value="कर्नाटक">कर्नाटक</option>
+                                <option value="तमिळनाडू">तमिळनाडू</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">जिल्हा *</label>
+                            <select class="form-input" id="district" required>
+                                <option value="">जिल्हा निवडा</option>
+                                <option value="पुणे">पुणे</option>
+                                <option value="नाशिक">नाशिक</option>
+                                <option value="नागपूर">नागपूर</option>
+                                <option value="अहमदनगर">अहमदनगर</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">गाव *</label>
+                            <input type="text" class="form-input" placeholder="गावाचे नाव" id="village" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">पिनकोड</label>
+                            <input type="text" class="form-input" placeholder="6-अंकी पिनकोड" id="pincode" maxlength="6">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-6 pt-4 border-t border-gray-600">
+                        <button onclick="prevFormStep(1)" class="bg-gray-600 text-white hover:bg-gray-700 font-medium py-2 px-4 rounded transition flex items-center space-x-1">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>मागे</span>
+                        </button>
+                        <button onclick="nextFormStep(3)" class="btn-primary font-medium py-2 px-4 rounded transition flex items-center space-x-1">
+                            <span>पुढे</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Land & Crop Details -->
+                <div id="step-3" class="form-step p-4 md:p-6">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-tractor text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white mb-1">भूमि और फसल विवरण</h3>
+                            <p class="text-xs text-gray-300">तुमच्या शेतीची माहिती भरा</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">एकूण जमीन क्षेत्र (हेक्टर)</label>
+                            <input type="number" step="0.01" class="form-input" placeholder="उदा. २.५" id="total_land_area">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">मुख्य फसल</label>
+                            <select class="form-input" id="main_crop">
+                                <option value="">फसल निवडा</option>
+                                <option value="गहू">गहू</option>
+                                <option value="भात">भात</option>
+                                <option value="ऊस">ऊस</option>
+                                <option value="कापूस">कापूस</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">सिंचन स्त्रोत</label>
+                            <select class="form-input" id="irrigation_source">
+                                <option value="">स्त्रोत निवडा</option>
+                                <option value="पावसावर अवलंबून">पावसावर अवलंबून</option>
+                                <option value="विहीर">विहीर</option>
+                                <option value="बोअरवेल">बोअरवेल</option>
+                                <option value="कालवा">कालवा</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">मृदा प्रकार</label>
+                            <select class="form-input" id="soil_type">
+                                <option value="">मृदा प्रकार निवडा</option>
+                                <option value="काळी माती">काळी माती</option>
+                                <option value="तांबडी माती">तांबडी माती</option>
+                                <option value="गाळाची माती">गाळाची माती</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-6 pt-4 border-t border-gray-600">
+                        <button onclick="prevFormStep(2)" class="bg-gray-600 text-white hover:bg-gray-700 font-medium py-2 px-4 rounded transition flex items-center space-x-1">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>मागे</span>
+                        </button>
+                        <button onclick="nextFormStep(4)" class="btn-primary font-medium py-2 px-4 rounded transition flex items-center space-x-1">
+                            <span>पुढे</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Financial Information -->
+                <div id="step-4" class="form-step p-4 md:p-6">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-rupee-sign text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white mb-1">वित्तीय जानकारी</h3>
+                            <p class="text-xs text-gray-300">तुमची आर्थिक माहिती भरा</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">वार्षिक कुटुंब उत्पन्न (₹)</label>
+                            <input type="number" class="form-input" placeholder="उदा. १५००००" id="annual_income">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">कर्ज आहे का?</label>
+                            <select class="form-input" id="loan_status">
+                                <option value="">निवडा</option>
+                                <option value="होय">होय</option>
+                                <option value="नाही">नाही</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-6 pt-4 border-t border-gray-600">
+                        <button onclick="prevFormStep(3)" class="bg-gray-600 text-white hover:bg-gray-700 font-medium py-2 px-4 rounded transition flex items-center space-x-1">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>मागे</span>
+                        </button>
+                        <button onclick="nextFormStep(5)" class="btn-primary font-medium py-2 px-4 rounded transition flex items-center space-x-1">
+                            <span>पुढे</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 5: Allied Activities -->
+                <div id="step-5" class="form-step p-4 md:p-6">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-business-time text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white mb-1">अन्य गतिविधियां</h3>
+                            <p class="text-xs text-gray-300">तुमच्या इतर उद्योगांची माहिती</p>
+                        </div>
+                    </div>
+
+                    <div class="activity-grid">
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="animal_husbandry" name="activities" value="पशुपालन">
+                            <label for="animal_husbandry" class="text-sm text-white">पशुपालन</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="fisheries" name="activities" value="मत्स्यपालन">
+                            <label for="fisheries" class="text-sm text-white">मत्स्यपालन</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="beekeeping" name="activities" value="मधमाशीपालन">
+                            <label for="beekeeping" class="text-sm text-white">मधमाशीपालन</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="poultry" name="activities" value="कुक्कुटपालन">
+                            <label for="poultry" class="text-sm text-white">कुक्कुटपालन</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="dairy" name="activities" value="डेअरी व्यवसाय">
+                            <label for="dairy" class="text-sm text-white">डेअरी व्यवसाय</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="horticulture" name="activities" value="बागायती">
+                            <label for="horticulture" class="text-sm text-white">बागायती</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="organic_farming" name="activities" value="सेंद्रिय शेती">
+                            <label for="organic_farming" class="text-sm text-white">सेंद्रिय शेती</label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="food_processing" name="activities" value="अन्न प्रक्रिया">
+                            <label for="food_processing" class="text-sm text-white">अन्न प्रक्रिया</label>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-6 pt-4 border-t border-gray-600">
+                        <button onclick="prevFormStep(4)" class="bg-gray-600 text-white hover:bg-gray-700 font-medium py-2 px-4 rounded transition flex items-center space-x-1">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>मागे</span>
+                        </button>
+                        <button onclick="submitProfileForm()" class="btn-primary font-medium py-2 px-4 rounded transition flex items-center space-x-1">
+                            <span>योजना शोधा</span>
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div id="results-page" class="page hidden fade-in">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-white">शिफारस केलेल्या योजना</h1>
+                <p class="text-gray-300 marathi-text">तुमच्या प्रोफाइलनुसार योजना सापडल्या</p>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="card rounded-2xl p-6 mb-8">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-3 md:mb-0">
+                        <h3 class="font-semibold text-white mb-1">आपली प्रोफाइल</h3>
+                        <p class="text-gray-300 text-sm">तुमच्या माहितीनुसार योजना शोधल्या</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-300 mb-1" id="match-count">०</div>
+                        <div class="text-gray-300 text-sm">योजना जुळल्या</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Container -->
+            <div id="results-container" class="space-y-6">
+                <!-- Results will be populated here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Scheme Details Page -->
+        <div id="scheme-details-page" class="page hidden fade-in">
+            <button onclick="goBack()" class="mb-6 flex items-center gap-2 text-gray-300 hover:text-white">
+                <i class="fas fa-arrow-left w-4 h-4"></i>
+                मागे जा
+            </button>
+
+            <div id="scheme-details-content">
+                <!-- Scheme details will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Load JavaScript -->
+    <script src="schemes.js"></script>
+    
+</body>
+</html>

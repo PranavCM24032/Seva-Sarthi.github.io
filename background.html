@@ -1,0 +1,128 @@
+<style>
+    .video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+        background: #000;
+    }
+
+    .video-background iframe {
+        width: 100vw;
+        height: 56.25vw;
+        min-height: 100vh;
+        min-width: 177.77vh;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: none;
+        pointer-events: none;
+    }
+
+    .video-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: -1;
+    }
+</style>
+
+<div class="video-background" id="youtube-background"></div>
+<div class="video-overlay"></div>
+
+<script>
+    // YouTube Background with 177-second replay
+    function startYouTubeBackground() {
+        const videoId = 'g2O58yY8WQA';
+        const videoDuration = 177; // 2 minutes 57 seconds
+        const container = document.getElementById('youtube-background');
+        
+        // Get or create session
+        let sessionId = sessionStorage.getItem('videoSessionId');
+        if (!sessionId) {
+            sessionId = 'session_' + Date.now();
+            sessionStorage.setItem('videoSessionId', sessionId);
+            sessionStorage.setItem('sessionStartTime', Date.now().toString());
+        }
+        
+        // Calculate how many seconds into the current 177-second cycle we are
+        const sessionStart = parseInt(sessionStorage.getItem('sessionStartTime'));
+        const totalElapsed = (Date.now() - sessionStart) / 1000;
+        const currentTime = totalElapsed % videoDuration;
+        
+        console.log('Video position:', currentTime.toFixed(1) + 's / ' + videoDuration + 's');
+        
+        // Create YouTube iframe
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&disablekb=1&fs=0&playsinline=1&vq=hd720&start=${Math.floor(currentTime)}&enablejsapi=1`;
+        iframe.allow = 'autoplay; encrypted-media; playsinline';
+        iframe.allowFullscreen = false;
+        iframe.frameBorder = '0';
+        iframe.id = 'youtube-player';
+        
+        container.appendChild(iframe);
+
+        let player;
+        
+        // Load YouTube API for manual control
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+
+        window.onYouTubeIframeAPIReady = function() {
+            player = new YT.Player('youtube-player', {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        };
+
+        function onPlayerReady(event) {
+            console.log('Player ready, starting at:', currentTime.toFixed(1) + 's');
+            event.target.seekTo(currentTime, true);
+        }
+
+        function onPlayerStateChange(event) {
+            // Manual restart when video reaches near end
+            if (event.data === YT.PlayerState.PLAYING) {
+                setInterval(() => {
+                    if (player && player.getCurrentTime) {
+                        const videoTime = player.getCurrentTime();
+                        
+                        // If video is near end (last 5 seconds), restart it
+                        if (videoTime >= videoDuration - 5) {
+                            console.log('Video ending, restarting from beginning');
+                            player.seekTo(0, true);
+                            player.playVideo();
+                            
+                            // Reset session to maintain sync
+                            const newStartTime = Date.now() - ((totalElapsed % videoDuration) * 1000);
+                            sessionStorage.setItem('sessionStartTime', newStartTime.toString());
+                        }
+                    }
+                }, 1000); // Check every second
+            }
+        }
+
+        // Save time for continuation
+        const saveInterval = setInterval(() => {
+            sessionStorage.setItem('lastUpdate', Date.now().toString());
+        }, 1000);
+
+        // Cleanup
+        window.addEventListener('beforeunload', function() {
+            clearInterval(saveInterval);
+        });
+    }
+
+    // Start immediately
+    startYouTubeBackground();
+</script>

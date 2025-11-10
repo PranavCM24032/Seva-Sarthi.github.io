@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सेवा सारथी - शेतकऱ्यांचा डिजिटल साथीदार</title>
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Noto Sans Devanagari -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: white;
+        }
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        .marathi-text {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+        }
+
+        .brand-gradient {
+            background: linear-gradient(to right, #a8e6cf, #4CAF50);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .stat-card {
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            }
+            100% {
+                transform: scale(1.02);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    
+    <!-- Header Container -->
+    <div id="header-container"></div>
+
+   
+    <div id="background-container"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow relative z-10">
+        <!-- Welcome Section with Glass Effect -->
+        <section class="text-center mb-12">
+     
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 brand-gradient drop-shadow-lg">
+                    सेवा सारथी मध्ये आपले स्वागत आहे
+                </h1>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-8 marathi-text leading-relaxed">
+                    आधुनिक तंत्रज्ञानाच्या मदतीने शेती सोपी आणि फायदेशीर करण्याचा आमचा संकल्प
+                </p>
+                
+                
+    
+        </section>
+
+        <!-- Stats Grid with Glass Effect -->
+        <section class="mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Stat Card 1 -->
+                <div class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-green-500 transition-all duration-300 group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-300 marathi-text group-hover:text-gray-200">एकूण शेतकरी</p>
+                            <p class="text-3xl font-bold text-green-400 mt-1 counter" data-target="12456">0</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-green-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-green-400">people</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-center text-sm text-green-300">
+                            <span class="material-icons text-green-300 mr-1 animate-bounce">arrow_upward</span>
+                            <span class="marathi-text">१२% वाढ</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stat Card 2 -->
+                <div class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-blue-500 transition-all duration-300 group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-300 marathi-text group-hover:text-gray-200">सक्रिय योजना</p>
+                            <p class="text-3xl font-bold text-blue-400 mt-1 counter" data-target="24">0</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-blue-400">description</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-center text-sm text-blue-300">
+                            <span class="material-icons text-blue-300 mr-1 animate-pulse">arrow_upward</span>
+                            <span class="marathi-text">३ नवीन योजना</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stat Card 3 -->
+                <div class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-300 marathi-text group-hover:text-gray-200">बाजार भाव अद्ययावत</p>
+                            <p class="text-3xl font-bold text-yellow-400 mt-1">५ मिनि</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-yellow-400">update</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-center text-sm text-yellow-300">
+                            <span class="material-icons text-yellow-300 mr-1">access_time</span>
+                            <span class="marathi-text">अद्ययावत</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stat Card 4 -->
+                <div class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-300 marathi-text group-hover:text-gray-200">सहाय्य मिळाले</p>
+                            <p class="text-3xl font-bold text-purple-400 mt-1">९८%</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-purple-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-purple-400">thumb_up</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-center text-sm text-purple-300">
+                            <span class="material-icons text-purple-300 mr-1">emoji_events</span>
+                            <span class="marathi-text">उत्कृष्ट सेवा</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Grid with Glass Effect -->
+        <section class="mb-12">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+                <h2 class="text-3xl font-bold text-white marathi-text flex items-center">
+                    <div class="w-10 h-10 rounded-xl bg-green-500 bg-opacity-20 flex items-center justify-center mr-3">
+                        <span class="material-icons text-green-400">apps</span>
+                    </div>
+                    आमच्या सेवा
+                </h2>
+
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Weather Tool -->
+                <a href="weather.html" class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 group block">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 rounded-xl bg-yellow-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-yellow-400 text-2xl">wb_sunny</span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-white marathi-text group-hover:text-yellow-300 transition-colors">हवामान माहिती</h3>
+                            <p class="text-sm text-gray-300 marathi-text">ताजे हवामान अंदाज</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4 marathi-text leading-relaxed">
+                  ५ दिवसांचे हवामान अंदाज, तापमान, पाऊस आणि शेतकरी सल्ला 
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-yellow-900 bg-opacity-50 text-yellow-300 text-xs font-medium rounded-full marathi-text">तापमान</span>
+                        <span class="px-3 py-1 bg-yellow-900 bg-opacity-50 text-yellow-300 text-xs font-medium rounded-full marathi-text">पाऊस</span>
+                        <span class="px-3 py-1 bg-yellow-900 bg-opacity-50 text-yellow-300 text-xs font-medium rounded-full marathi-text">आर्द्रता</span>
+                    </div>
+                </a>
+
+                <!-- Market Prices Tool -->
+                <a href="market.html" class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-red-500 transition-all duration-300 group block">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 rounded-xl bg-red-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-red-400 text-2xl">trending_up</span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-white marathi-text group-hover:text-red-300 transition-colors">बाजार भाव</h3>
+                            <p class="text-sm text-gray-300 marathi-text">रिअल-टाइम मंडी भाव</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4 marathi-text leading-relaxed">
+                        किंमत ट्रेंड, विश्लेषण आणि भविष्यातील अंदाज
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-red-900 bg-opacity-50 text-red-300 text-xs font-medium rounded-full marathi-text">किमान-कमाल</span>
+                        <span class="px-3 py-1 bg-red-900 bg-opacity-50 text-red-300 text-xs font-medium rounded-full marathi-text">ट्रेंड</span>
+                        <span class="px-3 py-1 bg-red-900 bg-opacity-50 text-red-300 text-xs font-medium rounded-full marathi-text">अंदाज</span>
+                    </div>
+                </a>
+
+                <!-- Soil Check Tool -->
+                <a href="soil.html" class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-orange-500 transition-all duration-300 group block">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 rounded-xl bg-orange-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-orange-400 text-2xl">science</span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-white marathi-text group-hover:text-orange-300 transition-colors">माती तपासणी</h3>
+                            <p class="text-sm text-gray-300 marathi-text">मातीची गुणवत्ता तपासा</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4 marathi-text leading-relaxed">
+                        पोषक तत्व विश्लेषण आणि तज्ज्ञ सल्ला
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-orange-900 bg-opacity-50 text-orange-300 text-xs font-medium rounded-full marathi-text">pH मूल्य</span>
+                        <span class="px-3 py-1 bg-orange-900 bg-opacity-50 text-orange-300 text-xs font-medium rounded-full marathi-text">पोषक</span>
+                        <span class="px-3 py-1 bg-orange-900 bg-opacity-50 text-orange-300 text-xs font-medium rounded-full marathi-text">सल्ला</span>
+                    </div>
+                </a>
+                
+                <!-- Schemes Tool -->
+                <a href="schemes.html" class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 group block">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 rounded-xl bg-purple-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-purple-400 text-2xl">account_balance</span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-white marathi-text group-hover:text-purple-300 transition-colors">सरकारी योजना</h3>
+                            <p class="text-sm text-gray-300 marathi-text">शेतकरी कल्याण योजना</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4 marathi-text leading-relaxed">
+                        अनुदान, कर्ज माफी आणि विमा योजनांची माहिती
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-purple-900 bg-opacity-50 text-purple-300 text-xs font-medium rounded-full marathi-text">अनुदान</span>
+                        <span class="px-3 py-1 bg-purple-900 bg-opacity-50 text-purple-300 text-xs font-medium rounded-full marathi-text">कर्ज</span>
+                        <span class="px-3 py-1 bg-purple-900 bg-opacity-50 text-purple-300 text-xs font-medium rounded-full marathi-text">विमा</span>
+                    </div>
+                </a>
+                
+                <!-- Crop Management Tool -->
+                <a href="crop.html" class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-green-500 transition-all duration-300 group block">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 rounded-xl bg-green-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-green-400 text-2xl">eco</span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-white marathi-text group-hover:text-green-300 transition-colors">पीक व्यवस्थापन</h3>
+                            <p class="text-sm text-gray-300 marathi-text">पीक निवड आणि काळजी</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4 marathi-text leading-relaxed">
+                        पीक निवड, लागवड, काळजी आणि कीटक नियंत्रण
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-green-900 bg-opacity-50 text-green-300 text-xs font-medium rounded-full marathi-text">लागवड</span>
+                        <span class="px-3 py-1 bg-green-900 bg-opacity-50 text-green-300 text-xs font-medium rounded-full marathi-text">काळजी</span>
+                        <span class="px-3 py-1 bg-green-900 bg-opacity-50 text-green-300 text-xs font-medium rounded-full marathi-text">कीटक</span>
+                    </div>
+                </a>
+                
+                <!-- AI Assistant Tool -->
+                <a href="chatbot.html" class="bg-black bg-opacity-30 backdrop-blur-md rounded-2xl p-6 border border-gray-700 hover:border-indigo-500 transition-all duration-300 group block">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 rounded-xl bg-indigo-500 bg-opacity-20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-indigo-400 text-2xl">chat</span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-white marathi-text group-hover:text-indigo-300 transition-colors">AI सहाय्यक</h3>
+                            <p class="text-sm text-gray-300 marathi-text">शेती प्रश्न विचारा</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4 marathi-text leading-relaxed">
+                        शेतीविषयक प्रश्नांची उत्तरे मिळवा
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 text-indigo-300 text-xs font-medium rounded-full marathi-text">सल्ला</span>
+                        <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 text-indigo-300 text-xs font-medium rounded-full marathi-text">मदत</span>
+                        <span class="px-3 py-1 bg-indigo-900 bg-opacity-50 text-indigo-300 text-xs font-medium rounded-full marathi-text">प्रश्न</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Load JavaScript -->
+    <script src="home.js"></script>
+   
+</body>
+</html>
